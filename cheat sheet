@@ -1,0 +1,268 @@
+Perfect 🎯 — here’s your all-in-one Machine Learning Cheat Sheet for practicals and viva, covering:
+ ✅ Random Forest
+ ✅ AdaBoost
+ ✅ Linear Regression
+Everything here works on any dataset — you can literally copy-paste, run, and modify just column names.
+ Each model includes preprocessing, training, prediction, and evaluation (R², MAE, Accuracy).
+
+🧾 💡 UNIVERSAL ML CHEAT SHEET
+
+⚙️ Step 1: Import Libraries
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import r2_score, mean_absolute_error, accuracy_score, confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+⚙️ Step 2: Load or Create Dataset
+# Example: Synthetic health dataset
+data = pd.DataFrame({
+    'Age': np.random.randint(20, 80, 200),
+    'BloodPressure': np.random.randint(90, 150, 200),
+    'HeartRate': np.random.randint(60, 120, 200),
+    'Severity': np.random.randint(1, 10, 200),
+    'RecoveryTime': np.random.randint(5, 30, 200),     # Regression Target
+    'Disease': np.random.randint(0, 2, 200)            # Classification Target
+})
+
+data.head()
+
+🧠 For regression, target → RecoveryTime
+ 🧠 For classification, target → Disease
+
+⚙️ Step 3: Preprocessing
+# Choose target
+# For regression: target = 'RecoveryTime'
+# For classification: target = 'Disease'
+
+target = 'RecoveryTime'   # Change to 'Disease' for classification
+X = data.drop(columns=[target])
+y = data[target]
+
+# Scale features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Split train/test
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+
+
+🌳 Random Forest Cheat Section
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+
+# 1️⃣ Choose model type
+is_regression = True  # Change to False for classification
+
+if is_regression:
+    model = RandomForestRegressor(n_estimators=100, random_state=42)
+else:
+    model = RandomForestClassifier(n_estimators=100, random_state=42)
+
+# 2️⃣ Train the model
+model.fit(X_train, y_train)
+
+# 3️⃣ Predict
+y_pred = model.predict(X_test)
+
+# 4️⃣ Evaluate
+if is_regression:
+    print("R² Score:", round(r2_score(y_test, y_pred), 3))
+    print("MAE:", round(mean_absolute_error(y_test, y_pred), 3))
+else:
+    print("Accuracy:", round(accuracy_score(y_test, y_pred), 3))
+    print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+
+🔍 Notes
+n_estimators: number of trees (default 100)
+
+
+criterion: “gini” or “entropy” (classification)
+
+
+max_depth: limit tree depth to prevent overfitting
+
+
+✅ Advantages:
+Handles non-linear data
+
+
+Works well on small/large datasets
+
+
+Reduces overfitting via averaging
+
+
+
+⚡ AdaBoost Cheat Section
+from sklearn.ensemble import AdaBoostClassifier, AdaBoostRegressor
+
+# 1️⃣ Choose model type
+is_regression = True  # Change to False for classification
+
+if is_regression:
+    model = AdaBoostRegressor(n_estimators=100, learning_rate=0.8, random_state=42)
+else:
+    model = AdaBoostClassifier(n_estimators=100, learning_rate=0.8, random_state=42)
+
+# 2️⃣ Train
+model.fit(X_train, y_train)
+
+# 3️⃣ Predict
+y_pred = model.predict(X_test)
+
+# 4️⃣ Evaluate
+if is_regression:
+    print("R² Score:", round(r2_score(y_test, y_pred), 3))
+    print("MAE:", round(mean_absolute_error(y_test, y_pred), 3))
+else:
+    print("Accuracy:", round(accuracy_score(y_test, y_pred), 3))
+    print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+
+🔍 Notes
+Boosting = builds models sequentially, each fixing previous errors.
+
+
+learning_rate controls weight updates.
+
+
+Works well for imbalanced datasets and weak learners.
+
+
+✅ Advantages:
+Great for small datasets
+
+
+Focuses on hard-to-predict cases
+
+
+Can boost simple models’ performance
+
+
+
+📈 Linear Regression Cheat Section
+from sklearn.linear_model import LinearRegression
+
+# 1️⃣ Train model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# 2️⃣ Predict
+y_pred = model.predict(X_test)
+
+# 3️⃣ Evaluate
+print("R² Score:", round(r2_score(y_test, y_pred), 3))
+print("Mean Absolute Error:", round(mean_absolute_error(y_test, y_pred), 3))
+
+# 4️⃣ Visualization
+plt.figure(figsize=(5,4))
+sns.scatterplot(x=y_test, y=y_pred)
+plt.xlabel('Actual')
+plt.ylabel('Predicted')
+plt.title('Actual vs Predicted')
+plt.show()
+
+🔍 Notes
+Assumes linear relation between features and target.
+
+
+Output equation:
+ [
+ y = b_0 + b_1x_1 + b_2x_2 + ... + b_nx_n
+ ]
+
+
+Metrics:
+
+
+R² Score → goodness of fit (0–1)
+
+
+MAE → average absolute error
+
+
+✅ Advantages:
+Simple & interpretable
+
+
+Works best with continuous data
+
+
+Good baseline model
+
+
+
+📊 Quick Model Comparison Summary
+Model
+Type
+Handles Non-linearity
+Overfitting Control
+Accuracy Metric
+Key Parameter
+Linear Regression
+Regression
+❌ No
+❌ None
+R², MAE
+—
+Random Forest
+Both
+✅ Yes
+✅ Yes (Bagging)
+R² / Accuracy
+n_estimators
+AdaBoost
+Both
+✅ Yes
+✅ Yes (Boosting)
+R² / Accuracy
+learning_rate
+
+
+🧮 Evaluation Metrics Cheatsheet
+Metric
+Formula / Meaning
+Use
+R² (R-squared)
+(1 - \frac{\sum(y - \hat{y})^2}{\sum(y - \bar{y})^2})
+Measures how well regression model fits data (1 = perfect)
+MAE (Mean Absolute Error)
+( \frac{1}{n} \sum
+y - \hat{y}
+Accuracy
+( \frac{\text{Correct Predictions}}{\text{Total Predictions}} )
+Classification performance
+Confusion Matrix
+Table of TP, FP, FN, TN
+Visualizes classification results
+
+
+🗣️ Viva Quick Answers
+Question
+Answer
+What is Random Forest?
+An ensemble of multiple decision trees that vote for the final result.
+What is AdaBoost?
+A boosting algorithm that combines weak learners sequentially.
+What is Linear Regression?
+A model that predicts a target by fitting a straight line through data points.
+What is the difference between Random Forest and AdaBoost?
+RF uses bagging (parallel trees), AdaBoost uses boosting (sequential trees).
+What are R² and MAE?
+R² measures fit quality, MAE measures average error.
+Why do we scale data?
+To ensure fair contribution of each feature.
+Which algorithm handles nonlinear data best?
+Random Forest or AdaBoost.
+
+
+🧾 Short Summary
+✅ Linear Regression → Simple, interpretable baseline
+ ✅ Random Forest → Robust, accurate, less overfitting
+ ✅ AdaBoost → Improves weak models by focusing on hard examples
+
+Would you like me to generate a ready-to-run .ipynb notebook (with all 3 models + outputs) packaged as a ZIP like your previous AIDS-II practicals?
+ It’ll be perfectly formatted for your lab exam demonstration.
+
